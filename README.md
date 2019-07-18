@@ -24,11 +24,11 @@ To get started you need to create a `.trafficator.js` file with at least one fun
 # .trafficator.js
 
 module.exports = {
-	funnels: [
-		{
-			entry: 'https://my-project.local/'
-		}
-	]
+  funnels: [
+    {
+      entry: 'https://my-project.local/'
+    }
+  ]
 };
 ```
 
@@ -61,19 +61,19 @@ The flexibility of trafficator comes from defining funnel steps. These are a set
 
 ```js
 module.exports = {
-	funnels: [
-		{
-			entry: 'https://my-project.local/'
-			steps: [
-				{
-					action: async (page) => {
-						// Page is the `page` object from Puppeteer.
-						await page.click('.main-menu a');
-					}
-				}
-			]
-		}
-	]
+  funnels: [
+    {
+      entry: 'https://my-project.local/'
+      steps: [
+        {
+          action: async (page) => {
+            // Page is the `page` object from Puppeteer.
+            await page.click('.main-menu a');
+          }
+        }
+      ]
+    }
+  ]
 };
 ```
 
@@ -93,18 +93,18 @@ If `probability` is callback it recieves the `page` object from Puppeteer as an 
 
 ```js
 {
-	action: async (page) => await page.click('a'),
-	probability: async (page) => {
-		// Get data from the browser context.
-		return await page.evaluate(() => {
-			if ( localStorage.getItem('ab_test') === 2 ) {
-				// 30% chance.
-				return 0.3;
-			}
-			// 10% chance.
-			return 0.1;
-		});
-	}
+  action: async (page) => await page.click('a'),
+  probability: async (page) => {
+    // Get data from the browser context.
+    return await page.evaluate(() => {
+      if ( localStorage.getItem('ab_test') === 2 ) {
+        // 30% chance.
+        return 0.3;
+      }
+      // 10% chance.
+      return 0.1;
+    });
+  }
 }
 ```
 
@@ -118,42 +118,42 @@ If the action does not navigate set `willNotNavigate` to `true` so that the next
 
 ```js
 module.exports = {
-	// integer: number of sessions to run
-	sessions: 10,
-	// integer: number of concurrent sessions
-	concurrency: 5,
-	// array: funnel definitions
-	funnels: [
-		// object: funnel object
-		{
-			// string|array: entry point URL.
-			entry: 'https://my-project.local/',
-			// array: step objects
-			steps: [
-				// object: step object
-				{
-					// function: step action callback
-					action: async page => await page.evaluate(() => {
-						window.scrollTo(0, 500);
-					}),
-					// boolean: whether the action callback causes a navigation event
-					willNotNavigate: true
-				},
-				{
-					action: async page => await page.click('.target'),
-					// number|function: probability of drop-off
-					probability: 0.5
-				}
-			]
-		}
-	],
-	// array: custom referrers added sent with the entry page request
-	referer: [
-		// string: referrer URL
-		'',
-		'https://www.google.com/',
-		'https://twitter.com/',
-	]
+  // integer: number of sessions to run
+  sessions: 10,
+  // integer: number of concurrent sessions
+  concurrency: 5,
+  // array: funnel definitions
+  funnels: [
+    // object: funnel object
+    {
+      // string|array: entry point URL.
+      entry: 'https://my-project.local/',
+      // array: step objects
+      steps: [
+        // object: step object
+        {
+          // function: step action callback
+          action: async page => await page.evaluate(() => {
+            window.scrollTo(0, 500);
+          }),
+          // boolean: whether the action callback causes a navigation event
+          willNotNavigate: true
+        },
+        {
+          action: async page => await page.click('.target'),
+          // number|function: probability of drop-off
+          probability: 0.5
+        }
+      ]
+    }
+  ],
+  // array: custom referrers added sent with the entry page request
+  referer: [
+    // string: referrer URL
+    '',
+    'https://www.google.com/',
+    'https://twitter.com/',
+  ]
 };
 ```
 
