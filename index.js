@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Traffic generator based on Puppeteer.
  */
