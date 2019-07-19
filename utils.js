@@ -13,8 +13,11 @@ module.exports = {
 		}
 	},
 	getRandom: value => {
-		if (Array.isArray(value) && value.length) {
-			return value[Math.floor((Math.random() * value.length))];
+		if (Array.isArray(value)) {
+			if (value.length) {
+				return value[Math.floor((Math.random() * value.length))];
+			}
+			return null;
 		}
 		return value;
 	},

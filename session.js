@@ -50,7 +50,6 @@ expose(async (configFile, sessionId) => {
 
 			log('funnel_step_start', sessionId, currentStep);
 			const step = funnel.steps[currentStep];
-			console.log(step);
 			const probability = await resolve(step.probability || 1, page);
 
 			// Finish session if probability not met.

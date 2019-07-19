@@ -4,7 +4,7 @@
 module.exports = {
 	concurrency: 1,
 	sessions: 10,
-	referer: [],
+	referer: [''],
 	campaigns: [],
 	geo: [],
 	devices: [],
