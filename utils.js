@@ -1,4 +1,5 @@
 const fs = require('fs');
+const chalk = require('chalk');
 
 module.exports = {
 	getConfig: file => {
@@ -7,7 +8,8 @@ module.exports = {
 			fs.accessSync(file, fs.constants.R_OK);
 			return Object.assign( {}, defaultConfig, require(file) );
 		} catch ( err ) {
-			throw err;
+			console.log(chalk.red(`Unable to locate the config file "${file}"`));
+			process.exit(1);
 		}
 	},
 	getRandom: value => {
