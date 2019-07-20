@@ -23,7 +23,7 @@ const argv = yargs
 	.option('concurrency', {
 		alias: 'c',
 		description: 'The number of sessions to run simultaneously. A higher number will use more resources but will complete more quickly.',
-		type: 'string',
+		type: 'number',
 	})
 	.option('sessions', {
 		alias: 's',
@@ -77,8 +77,9 @@ if (!Array.isArray(config.funnels)) {
 
 	// Queue sessions.
 	for (i = 0; i < config.sessions; i++) {
+		const sessionId = i + 1;
 		pool.queue(async session => {
-			await session(argv.config, i);
+			await session(argv.config, sessionId);
 		});
 	}
 

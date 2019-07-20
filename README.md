@@ -81,6 +81,10 @@ You can define as many steps as you like but at a minimum they must define an `a
 
 #### Step options
 
+**`name <string>`**
+
+An optional name for the step shown in output logs.
+
 **`action <function>`**
 
 A callback that accepts the `page` puppeteer option. Check the [Puppeteer docs](https://github.com/GoogleChrome/puppeteer) for more details on what you can do.
@@ -118,30 +122,33 @@ If the action does not navigate set `willNotNavigate` to `true` so that the next
 
 ```js
 module.exports = {
-  // integer: number of sessions to run
+  // <integer>: number of sessions to run
   sessions: 10,
-  // integer: number of concurrent sessions
+  // <integer>: number of concurrent sessions
   concurrency: 5,
-  // array: funnel definitions
+  // <array>: funnel definitions
   funnels: [
-    // object: funnel object
+    // <object>: funnel object
     {
-      // string|array: entry point URL.
+      // <string|array>: entry point URL.
       entry: 'https://my-project.local/',
-      // array: step objects
+      // <array>: step objects
       steps: [
-        // object: step object
+        // <object>: step object
         {
-          // function: step action callback
+          // <string>: step name
+          name: 'Scroll down',
+          // <function>: step action callback
           action: async page => await page.evaluate(() => {
             window.scrollTo(0, 500);
           }),
-          // boolean: whether the action callback causes a navigation event
+          // <boolean>: whether the action callback causes a navigation event
           willNotNavigate: true
         },
         {
-          action: async page => await page.click('.target'),
-          // number|function: probability of drop-off
+          name: 'Click target link',
+          action: async page => await page.click('a.target'),
+          // <number|function>: probability of drop-off
           probability: 0.5
         }
       ]
