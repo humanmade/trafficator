@@ -1,4 +1,6 @@
-# Trafficator
+# Trafficator 
+
+[![npm version](https://badge.fury.io/js/trafficator.svg)](https://www.npmjs.com/package/trafficator)
 
 A simple web traffic generator built on Puppeteer for local analytics testing.
 
