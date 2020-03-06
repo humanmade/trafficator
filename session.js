@@ -8,7 +8,8 @@ const {
 	resolve,
 	getRandom,
 	log,
-} = require('./utils');
+} = require( './utils' );
+const UserAgent = require( 'user-agents' );
 
 expose(async (configFile, sessionId) => {
 	const config = getConfig(configFile);
@@ -23,7 +24,10 @@ expose(async (configFile, sessionId) => {
 	// Get start point and referer.
 	const entry = await resolve(getRandom(funnel.entry), page);
 	const referer = await resolve(getRandom(funnel.referer || config.referer || ''), page);
-	const userAgent = await resolve(getRandom(config.), page);
+
+	// Set a random user agent.
+	const userAgent = new UserAgent( config.browsers || {} );
+	page.setUserAgent( userAgent.toString() );
 
 	// Track steps.
 	let currentStep = 0;

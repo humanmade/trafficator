@@ -8,7 +8,7 @@ module.exports = {
 	campaigns: [],
 	geo: [],
 	devices: [],
-	browsers: [],
+	browsers: {},
 	funnels: [],
 	verbose: false,
 };
