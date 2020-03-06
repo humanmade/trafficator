@@ -23,6 +23,7 @@ expose(async (configFile, sessionId) => {
 	// Get start point and referer.
 	const entry = await resolve(getRandom(funnel.entry), page);
 	const referer = await resolve(getRandom(funnel.referer || config.referer || ''), page);
+	const userAgent = await resolve(getRandom(config.), page);
 
 	// Track steps.
 	let currentStep = 0;
