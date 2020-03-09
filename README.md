@@ -47,7 +47,7 @@ trafficator --sessions 100 --concurrency 10
 trafficator --config path/to/config.js
 ```
 
-#### Funnel options
+### Funnel options
 
 **`entry <string | array>`**
 
@@ -120,7 +120,7 @@ Trafficator makes the assumption that action callbacks will trigger a navigation
 
 If the action does not navigate set `willNotNavigate` to `true` so that the next step is run.
 
-### Full configuration example
+## Full configuration example
 
 ```js
 module.exports = {
@@ -162,16 +162,40 @@ module.exports = {
     '',
     'https://www.google.com/',
     'https://twitter.com/',
-  ]
+  ],
+  // object: configuration for the user-agents library.
+  browsers: {}
 };
 ```
+
+### Browsers / User Agents
+
+User agent support is provided by the [`user-agents`](https://www.npmjs.com/package/user-agents) library. By default this will choose a random user agent string for the visitors based on common distributions.
+
+The `user-agents` library accepts a configuration object that can be passed by settings the `browsers` property in your `.trafficator.js` config file.
+
+For example to select only mobile device user agents strings you could do the following:
+
+```js
+module.exports = {
+  funnels: [
+    {
+      entry: 'https://example.org'
+    }
+  ],
+  browsers: {
+    deviceCategory: 'mobile'
+  }
+};
+```
+
+You can find more complete configuration information on the `user-agents` repository.
 
 ## Roadmap
 
 This is a simple initial iteration and there's much more it could do in future. This includes:
 
 - Device emulation
-- Custom user agent strings
 - Campaigns eg. `utm_source`, `utm_campaign`
 - Geo location
 - Customisable request headers
