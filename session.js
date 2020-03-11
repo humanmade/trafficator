@@ -25,7 +25,15 @@ expose(async (configFile, sessionId) => {
 
   // Set a random user agent.
   const userAgent = new UserAgent(config.browsers || {});
-  page.setUserAgent(userAgent.toString());
+  await page.setUserAgent(userAgent.toString());
+
+  // Apply custom request headers.
+  Object.entries(config.headers || {}).map(async ([header, value]) => {
+    const content = await resolve(getRandom(value) || "");
+    await page.setExtraHTTPHeaders({
+      [header]: content
+    });
+  });
 
   // Track steps.
   let currentStep = 0;
@@ -33,7 +41,7 @@ expose(async (configFile, sessionId) => {
   // Handle session end.
   const done = async () => {
     log("session_end", sessionId);
-    const timeOnPage = await resolve(funnel.timeOnPage || 2000, page);
+    const timeOnPage = await resolve(funnel.timeOnPage || 1000, page);
     await page.waitFor(timeOnPage);
     await page.close({
       runBeforeUnload: true

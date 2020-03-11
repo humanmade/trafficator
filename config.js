@@ -9,5 +9,6 @@ module.exports = {
   geo: [],
   browsers: {},
   funnels: [],
-  verbose: false
+  verbose: false,
+  headers: {},
 };
