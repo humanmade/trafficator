@@ -1,4 +1,4 @@
-# Trafficator 
+# Trafficator
 
 [![npm version](https://badge.fury.io/js/trafficator.svg)](https://www.npmjs.com/package/trafficator)
 
@@ -163,8 +163,10 @@ module.exports = {
     'https://www.google.com/',
     'https://twitter.com/',
   ],
-  // object: configuration for the user-agents library.
-  browsers: {}
+  // object: configuration for the user-agents library
+  browsers: {},
+  // object: key/value pairs of custom request headers to send
+  headers: {},
 };
 ```
 
@@ -190,6 +192,30 @@ module.exports = {
 ```
 
 You can find more complete configuration information on the `user-agents` repository.
+
+### Request Headers
+
+To send custom request headers for each visit you can provide them in your configuration under the `headers` property. This should be key/value pairs where the keys are the header names and values are the header contents. If an array of header values is provided a random one will be selected.
+
+For example to mimic possible AWS CloudFront headers such as `CloudFront-Viewer-Country` you could set the following:
+
+```js
+module.exports = {
+  funnels: [
+    {
+      entry: 'https://example.org'
+    }
+  ],
+  headers: {
+    'CloudFront-Viewer-IsMobile': '1',
+    'CloudFront-Viewer-Country': [
+      'US',
+      'GB',
+      'FR'
+    ]
+  }
+};
+```
 
 ## Roadmap
 
