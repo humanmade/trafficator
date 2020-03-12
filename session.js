@@ -41,7 +41,7 @@ expose(async (configFile, sessionId) => {
   // Handle session end.
   const done = async () => {
     log("session_end", sessionId);
-    const timeOnPage = await resolve(funnel.timeOnPage || 1000, page);
+    const timeOnPage = await resolve(funnel.timeOnPage || 2000, page);
     await page.waitFor(timeOnPage);
     await page.close({
       runBeforeUnload: true
@@ -54,8 +54,8 @@ expose(async (configFile, sessionId) => {
   const doStep = async () => {
     try {
       // Safety net.
-      if (!funnel.steps[currentStep]) {
-        done();
+      if (!funnel.steps || !funnel.steps[currentStep]) {
+        await done();
         return;
       }
 
@@ -66,7 +66,7 @@ expose(async (configFile, sessionId) => {
       // Finish session if probability not met.
       if (Math.random() > probability) {
         log("funnel_stop", sessionId, step.name || currentStep);
-        done();
+        await done();
         return;
       }
 
@@ -79,7 +79,7 @@ expose(async (configFile, sessionId) => {
       }
     } catch (error) {
       log("funnel_step_error", sessionId, error);
-      done();
+      await done();
     }
 
     // Increment step.
@@ -110,6 +110,6 @@ expose(async (configFile, sessionId) => {
     });
   } catch (error) {
     log("session_start_error", sessionId, error);
-    done();
+    await done();
   }
 });
