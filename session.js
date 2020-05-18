@@ -39,7 +39,17 @@ expose(async (configFile, sessionId) => {
   let currentStep = 0;
 
   // Handle session end.
+  let completer;
+  const completePromise = new Promise( ( resolve, reject ) => {
+    completer = { resolve, reject };
+  } );
+  let didDone = false;
   const done = async () => {
+    if ( didDone ) {
+      return;
+    }
+    didDone = true;
+
     log("session_end", sessionId);
     const timeOnPage = await resolve(funnel.timeOnPage || 2000, page);
     await page.waitFor(timeOnPage);
@@ -47,6 +57,7 @@ expose(async (configFile, sessionId) => {
       runBeforeUnload: true
     });
     await browser.close();
+    completer.resolve();
     return;
   };
 
@@ -139,4 +150,5 @@ expose(async (configFile, sessionId) => {
     log("session_start_error", sessionId, error);
     await done();
   }
+  await completePromise;
 });
