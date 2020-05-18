@@ -98,6 +98,10 @@ expose(async (configFile, sessionId) => {
     await doStep();
   });
 
+  page.on("console", msg => {
+    log("console:" + msg.type(), sessionId, msg.text());
+  });
+
   log("session_start", sessionId, {
     entry,
     referer
