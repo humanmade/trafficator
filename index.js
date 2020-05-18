@@ -73,7 +73,13 @@ if (!Array.isArray(config.funnels)) {
 // Quaid... start the reactor.
 (async () => {
   // Create worker pool.
-  const pool = Pool(() => spawn(new Worker("./session")), config.concurrency);
+  const pool = Pool(() => {
+    const worker = new Worker("./session");
+    worker.on('error', e => {
+      console.log(e);
+    });
+    return spawn( worker );
+  }, config.concurrency);
 
   // Queue sessions.
   for (i = 0; i < config.sessions; i++) {
