@@ -87,7 +87,13 @@ expose(async (configFile, sessionId) => {
   };
 
   // Navigation handler.
+  let didFail = false;
   page.on("load", async () => {
+    if ( didFail ) {
+      await done();
+      return;
+    }
+
     log("page_loaded", sessionId, page.url());
 
     // Stay on page for configured time, default to 2 seconds.
@@ -100,6 +106,23 @@ expose(async (configFile, sessionId) => {
 
   page.on("console", msg => {
     log("console:" + msg.type(), sessionId, msg.text());
+  });
+
+  page.on("error", e => {
+    log("error", e.message);
+    didFail = true;
+  });
+
+  page.on("requestfailed", e => {
+    log("request_failed", e.failure().errorText);
+    didFail = true;
+  });
+
+  page.on("requestfinished", e => {
+    if ( ! e.response().ok() ) {
+      log("response_error", e.response().status(), e.response().statusText());
+      didFail = true;
+    }
   });
 
   log("session_start", sessionId, {
