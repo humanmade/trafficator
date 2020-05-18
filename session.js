@@ -98,7 +98,7 @@ expose(async (configFile, sessionId) => {
     await doStep();
   });
 
-  page.on('console', msg => {
+  page.on("console", msg => {
     log("console:" + msg.type(), sessionId, msg.text());
   });
 
