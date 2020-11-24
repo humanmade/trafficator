@@ -52,7 +52,7 @@ expose(async (configFile, sessionId) => {
 
     log("session_end", sessionId);
     const timeOnPage = await resolve(funnel.timeOnPage || 2000, page);
-    await page.waitFor(timeOnPage);
+    await page.waitForTimeout(timeOnPage);
     await page.close({
       runBeforeUnload: true
     });
@@ -84,17 +84,17 @@ expose(async (configFile, sessionId) => {
       log("funnel_step_action", sessionId, step.name || currentStep);
       await step.action(page);
 
+      // Increment step.
+      currentStep++;
+
       // If a page load won't be triggered then call next step.
-      if (funnel.willNotNavigate) {
+      if (step.willNotNavigate) {
         await doStep();
       }
     } catch (error) {
       log("funnel_step_error", sessionId, error);
       await done();
     }
-
-    // Increment step.
-    currentStep++;
   };
 
   // Navigation handler.
@@ -109,14 +109,14 @@ expose(async (configFile, sessionId) => {
 
     // Stay on page for configured time, default to 2 seconds.
     const timeOnPage = await resolve(funnel.timeOnPage || 2000, page);
-    await page.waitFor(timeOnPage);
+    await page.waitForTimeout(timeOnPage);
 
     // Proceed to next step.
     await doStep();
   });
 
   page.on("console", msg => {
-    log("console:" + msg.type(), sessionId, msg.text());
+    log("console:" + msg.type(), sessionId, msg.text(), msg.stackTrace());
   });
 
   page.on("error", e => {
@@ -125,8 +125,10 @@ expose(async (configFile, sessionId) => {
   });
 
   page.on("requestfailed", e => {
-    log("request_failed", e.failure().errorText);
-    didFail = true;
+    if ( e.url() === page.url() ) {
+      log("request_failed", e.url(), page.url(), e.failure().errorText);
+      didFail = true;
+    }
   });
 
   page.on("requestfinished", e => {
@@ -149,6 +151,7 @@ expose(async (configFile, sessionId) => {
   } catch (error) {
     log("session_start_error", sessionId, error);
     await done();
+  } finally {
+    await completePromise;
   }
-  await completePromise;
 });
